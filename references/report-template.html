@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{TITLE}}</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-secondary: #f8f9fa;
+      --text: #1a1a2e;
+      --text-muted: #6c757d;
+      --accent: #4361ee;
+      --accent-light: #e8edff;
+      --border: #e9ecef;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1a1a2e;
+        --bg-secondary: #16213e;
+        --text: #e8e8e8;
+        --text-muted: #a0a0a0;
+        --accent: #4cc9f0;
+        --accent-light: #1a2744;
+        --border: #2d3748;
+        --success: #34d399;
+        --warning: #fbbf24;
+        --danger: #f87171;
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .meta {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .confidence {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .confidence-bar {
+      width: 100px;
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .confidence-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    .confidence-high { background: var(--success); }
+    .confidence-medium { background: var(--warning); }
+    .confidence-low { background: var(--danger); }
+
+    section {
+      margin-bottom: 2rem;
+    }
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+    .key-findings {
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .key-findings ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .key-findings li {
+      padding-left: 1.5rem;
+      position: relative;
+    }
+    .key-findings li::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    /* Comparison table */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+    .comparison-table th,
+    .comparison-table td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .comparison-table th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+    }
+    .comparison-table tr:hover {
+      background: var(--accent-light);
+    }
+    .winner {
+      background: var(--accent-light);
+      font-weight: 600;
+    }
+
+    /* Sources */
+    .sources {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .sources h2 {
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .source-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .source-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      font-size: 0.875rem;
+    }
+    .source-item a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .source-item a:hover {
+      text-decoration: underline;
+    }
+    .source-score {
+      background: var(--bg-secondary);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 3rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>{{TITLE}}</h1>
+    <div class="meta">
+      <div class="confidence">
+        <span>Confidence:</span>
+        <div class="confidence-bar">
+          <div class="confidence-fill confidence-{{CONFIDENCE_CLASS}}" style="width: {{CONFIDENCE}}%"></div>
+        </div>
+        <span>{{CONFIDENCE}}%</span>
+      </div>
+      <div>Sources: {{SOURCE_COUNT}}</div>
+      <div>Generated: {{DATE}}</div>
+    </div>
+  </header>
+
+  <section class="key-findings">
+    <h2>Key Findings</h2>
+    <ul>
+      {{KEY_FINDINGS}}
+      <!-- Example:
+      <li>Finding one with important insight</li>
+      <li>Finding two with another key point</li>
+      <li>Finding three with conclusion</li>
+      -->
+    </ul>
+  </section>
+
+  <section class="content">
+    {{MAIN_CONTENT}}
+    <!--
+    Add sections as needed:
+    <h2>Section Title</h2>
+    <p>Content...</p>
+
+    For comparisons, use:
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Criteria</th>
+          <th>Option A</th>
+          <th>Option B</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Feature</td>
+          <td class="winner">Better</td>
+          <td>Good</td>
+        </tr>
+      </tbody>
+    </table>
+    -->
+  </section>
+
+  <section class="sources">
+    <h2>Sources</h2>
+    <ul class="source-list">
+      {{SOURCES}}
+      <!-- Example:
+      <li class="source-item">
+        <a href="https://example.com" target="_blank">example.com — Page Title</a>
+        <span class="source-score">Score: 92</span>
+      </li>
+      -->
+    </ul>
+  </section>
+
+  <footer>
+    Research generated by Claude with Exa + Tabstack
+  </footer>
+</body>
+</html>
