@@ -1,0 +1,24 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="56" fill="#4361ee" fill-opacity="0.1" stroke="#4361ee" stroke-width="2"/>
+
+  <!-- Magnifying glass -->
+  <circle cx="50" cy="50" r="20" fill="none" stroke="#4361ee" stroke-width="4" stroke-linecap="round"/>
+  <line x1="65" y1="65" x2="82" y2="82" stroke="#4361ee" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Research lines inside magnifying glass -->
+  <line x1="38" y1="45" x2="55" y2="45" stroke="#4361ee" stroke-width="2" stroke-linecap="round"/>
+  <line x1="38" y1="50" x2="62" y2="50" stroke="#4361ee" stroke-width="2" stroke-linecap="round"/>
+  <line x1="38" y1="55" x2="52" y2="55" stroke="#4361ee" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Sparkle / insight indicator -->
+  <circle cx="85" cy="35" r="3" fill="#f59e0b"/>
+  <line x1="85" y1="28" x2="85" y2="24" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+  <line x1="85" y1="42" x2="85" y2="46" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+  <line x1="78" y1="35" x2="74" y2="35" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+  <line x1="92" y1="35" x2="96" y2="35" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Confidence bar at bottom -->
+  <rect x="25" y="95" width="70" height="8" rx="4" fill="#e0e0e0"/>
+  <rect x="25" y="95" width="60" height="8" rx="4" fill="#10b981"/>
+</svg>

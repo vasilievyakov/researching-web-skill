@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code vs Cursor vs Windsurf — 2025 Comparison</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-secondary: #f8f9fa;
+      --bg-tertiary: #e9ecef;
+      --text: #1a1a2e;
+      --text-muted: #6c757d;
+      --accent: #4361ee;
+      --accent-light: #e8edff;
+      --border: #e0e0e0;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --claude: #d97706;
+      --cursor: #7c3aed;
+      --windsurf: #0891b2;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f0f1a;
+        --bg-secondary: #1a1a2e;
+        --bg-tertiary: #252540;
+        --text: #e8e8e8;
+        --text-muted: #a0a0a0;
+        --accent: #4cc9f0;
+        --accent-light: #1a2744;
+        --border: #2d3748;
+        --success: #34d399;
+        --warning: #fbbf24;
+        --danger: #f87171;
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+    .meta {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .confidence {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .confidence-bar {
+      width: 120px;
+      height: 10px;
+      background: var(--border);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .confidence-fill {
+      height: 100%;
+      border-radius: 5px;
+      background: var(--success);
+    }
+
+    section { margin-bottom: 2.5rem; }
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    h2::before {
+      content: "";
+      width: 4px;
+      height: 1.25rem;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    .verdict-box {
+      background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border);
+    }
+    .verdict-title {
+      font-weight: 600;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+    .verdict-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .verdict-card {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 1rem;
+      border-left: 4px solid var(--border);
+    }
+    .verdict-card.claude { border-left-color: var(--claude); }
+    .verdict-card.cursor { border-left-color: var(--cursor); }
+    .verdict-card.windsurf { border-left-color: var(--windsurf); }
+    .verdict-card h3 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .verdict-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .verdict-card .use-case {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    .comparison-table th,
+    .comparison-table td {
+      padding: 0.875rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .comparison-table th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+    }
+    .comparison-table th.claude { color: var(--claude); }
+    .comparison-table th.cursor { color: var(--cursor); }
+    .comparison-table th.windsurf { color: var(--windsurf); }
+    .comparison-table tr:hover {
+      background: var(--accent-light);
+    }
+    .comparison-table td.feature {
+      font-weight: 500;
+      color: var(--text);
+    }
+    .winner {
+      background: var(--accent-light);
+      font-weight: 600;
+      position: relative;
+    }
+    .winner::after {
+      content: "★";
+      position: absolute;
+      right: 0.5rem;
+      color: var(--accent);
+      font-size: 0.75rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-best { background: var(--success); color: white; }
+    .badge-good { background: var(--warning); color: #1a1a2e; }
+
+    .key-findings {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .key-findings ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .key-findings li {
+      padding-left: 1.75rem;
+      position: relative;
+    }
+    .key-findings li::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .sources {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .sources h2 { font-size: 1rem; }
+    .source-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .source-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      font-size: 0.85rem;
+    }
+    .source-item a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .source-item a:hover { text-decoration: underline; }
+    .source-score {
+      background: var(--bg-secondary);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 3rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Claude Code vs Cursor vs Windsurf</h1>
+    <p class="subtitle">AI Coding Tools Comparison — January 2025</p>
+    <div class="meta">
+      <div class="confidence">
+        <span>Confidence:</span>
+        <div class="confidence-bar">
+          <div class="confidence-fill" style="width: 85%"></div>
+        </div>
+        <span><strong>85%</strong></span>
+      </div>
+      <div>Sources: <strong>5</strong> independent</div>
+      <div>Consensus: <strong>Strong</strong></div>
+      <div>Generated: January 2025</div>
+    </div>
+  </header>
+
+  <section class="verdict-box">
+    <div class="verdict-title">Quick Verdict: Choose by Workflow</div>
+    <div class="verdict-grid">
+      <div class="verdict-card claude">
+        <h3>🧠 Claude Code</h3>
+        <p>Terminal-first, 200K context, 80.9% SWE-bench. Deep reasoning champion.</p>
+        <div class="use-case">→ Large refactors, DevOps, CI/CD automation</div>
+      </div>
+      <div class="verdict-card cursor">
+        <h3>⚡ Cursor</h3>
+        <p>VS Code fork, &lt;200ms completions, multi-model support. Speed king.</p>
+        <div class="use-case">→ Daily coding, interactive development</div>
+      </div>
+      <div class="verdict-card windsurf">
+        <h3>💰 Windsurf</h3>
+        <p>Cascade Flow agents, $15/mo. Best value for autonomous features.</p>
+        <div class="use-case">→ Budget-conscious, full agent capabilities</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="key-findings">
+    <h2>Key Findings</h2>
+    <ul>
+      <li><strong>No universal "best"</strong> — all 5 sources agree: choice depends on your workflow, not feature lists</li>
+      <li><strong>Claude Code leads benchmarks</strong> — 80.9% SWE-bench Verified (Opus 4.5), best for complex reasoning</li>
+      <li><strong>Cursor dominates speed</strong> — &lt;200ms inline completions, familiar VS Code UX, team governance</li>
+      <li><strong>Windsurf best value</strong> — $15/mo gets you autonomous Cascade agents (acquired by OpenAI May 2025)</li>
+      <li><strong>Hybrid approach wins</strong> — Many senior devs use Cursor daily + Claude Code for deep tasks</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Detailed Comparison</h2>
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th class="claude">Claude Code</th>
+          <th class="cursor">Cursor</th>
+          <th class="windsurf">Windsurf</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="feature">Interface</td>
+          <td>Terminal-first (CLI)</td>
+          <td>VS Code fork (GUI)</td>
+          <td>VS Code fork (GUI)</td>
+        </tr>
+        <tr>
+          <td class="feature">Pricing</td>
+          <td>$20/mo (Claude Pro)</td>
+          <td>$20/mo (Pro)</td>
+          <td class="winner">$15/mo (Pro)</td>
+        </tr>
+        <tr>
+          <td class="feature">Context Window</td>
+          <td class="winner">200K tokens</td>
+          <td>~50K tokens</td>
+          <td>~32K tokens</td>
+        </tr>
+        <tr>
+          <td class="feature">SWE-bench Score</td>
+          <td class="winner">80.9% (Opus 4.5)</td>
+          <td>Uses Claude/GPT</td>
+          <td>Uses GPT-5.2</td>
+        </tr>
+        <tr>
+          <td class="feature">Completion Speed</td>
+          <td>5-15 seconds</td>
+          <td class="winner">&lt;200ms</td>
+          <td>&lt;200ms - 30s</td>
+        </tr>
+        <tr>
+          <td class="feature">Autonomy Level</td>
+          <td class="winner">High (agentic)</td>
+          <td>Medium (copilot)</td>
+          <td class="winner">High (Cascade)</td>
+        </tr>
+        <tr>
+          <td class="feature">Model Selection</td>
+          <td>Anthropic only</td>
+          <td class="winner">Claude, GPT, Gemini, DeepSeek</td>
+          <td>GPT-5.2, Codeium</td>
+        </tr>
+        <tr>
+          <td class="feature">Multi-file Editing</td>
+          <td class="winner">Excellent</td>
+          <td>Good</td>
+          <td class="winner">Excellent</td>
+        </tr>
+        <tr>
+          <td class="feature">Debugging</td>
+          <td class="winner">Deep (runs tests, reads logs)</td>
+          <td>IDE-native</td>
+          <td>AI + breakpoint observation</td>
+        </tr>
+        <tr>
+          <td class="feature">Learning Curve</td>
+          <td>Medium-High (CLI)</td>
+          <td class="winner">Low (VS Code)</td>
+          <td class="winner">Low (VS Code)</td>
+        </tr>
+        <tr>
+          <td class="feature">Enterprise Ready</td>
+          <td class="winner">SOC 2, ISO, HIPAA</td>
+          <td>SOC 2, SSO</td>
+          <td>Developing</td>
+        </tr>
+        <tr>
+          <td class="feature">Best For</td>
+          <td><span class="badge badge-best">Refactoring</span></td>
+          <td><span class="badge badge-best">Daily Coding</span></td>
+          <td><span class="badge badge-best">Budget Agents</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Recommendation</h2>
+    <div class="key-findings">
+      <ul>
+        <li><strong>Beginners:</strong> Start with Cursor — familiar VS Code UX, gentle learning curve</li>
+        <li><strong>Budget-conscious:</strong> Windsurf $15/mo — best agent features per dollar</li>
+        <li><strong>Power users:</strong> Claude Code for complex tasks, Cursor for daily work</li>
+        <li><strong>Enterprise:</strong> Claude Code via AWS Bedrock — compliance + deep reasoning</li>
+        <li><strong>Optimal setup:</strong> Cursor ($20) + Claude Code ($20) = $40/mo covers all workflows</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sources">
+    <h2>Sources</h2>
+    <ul class="source-list">
+      <li class="source-item">
+        <a href="https://www.digitalapplied.com/blog/ai-coding-tools-comparison-december-2025" target="_blank">digitalapplied.com — AI Coding Tools Comparison: December 2025 Rankings</a>
+        <span class="source-score">Score: 82</span>
+      </li>
+      <li class="source-item">
+        <a href="https://decode.agency/article/cursor-vs-claude-code/" target="_blank">decode.agency — Cursor vs. Claude Code: in-depth comparison for dev teams</a>
+        <span class="source-score">Score: 78</span>
+      </li>
+      <li class="source-item">
+        <a href="https://amirteymoori.com/cursor-vs-windsurf-vs-claude-code-which-ai-coding-tool-should-you-choose-in-2025/" target="_blank">amirteymoori.com — Cursor vs Windsurf vs Claude Code: 2025</a>
+        <span class="source-score">Score: 75</span>
+      </li>
+      <li class="source-item">
+        <a href="https://www.humai.blog/best-ai-coding-ide-2025-cursor-vs-antigravity-vs-claude-code-vs-windsurf-the-complete-comparison/" target="_blank">humai.blog — Best AI Coding IDE 2025: Complete Comparison</a>
+        <span class="source-score">Score: 72</span>
+      </li>
+      <li class="source-item">
+        <a href="https://aicomparison.ai/claude-code-vs-cursor/" target="_blank">aicomparison.ai — Claude Code vs Cursor 2025</a>
+        <span class="source-score">Score: 70</span>
+      </li>
+    </ul>
+  </section>
+
+  <footer>
+    Research generated by Claude with Exa + Tabstack MCP tools<br>
+    Skill: researching-web v4
+  </footer>
+</body>
+</html>
