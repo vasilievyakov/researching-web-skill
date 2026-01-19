@@ -41,7 +41,7 @@ Show progress with real data at each step:
 [■■■■■■] Confidence: 85%
          ├─ Consensus: 4/5 agree
          ├─ Top source: 82 (official docs tier)
-         ├─ Freshness: 5/5 from 2024-2025
+         ├─ Freshness: 5/5 from 2025-2026
          └─ Contradictions: none
 
 📊 RESEARCH DEPTH

@@ -70,7 +70,7 @@ Most AI assistants give you answers. This skill gives you **researched insights*
 
 ```
 ══════════════════════════════════════════
-   RESEARCHING: "AI coding tools market 2025"
+   RESEARCHING: "AI coding tools market 2026"
 ══════════════════════════════════════════
 [■■□□□□] Search: Exa 8 | Tabstack 5 → 10 unique
 
@@ -94,7 +94,7 @@ Most AI assistants give you answers. This skill gives you **researched insights*
 [■■■■■■] Confidence: 87%
          ├─ Consensus: 4/5 agree
          ├─ Top source: 90 (CB Insights)
-         ├─ Freshness: 5/5 from 2024-2025
+         ├─ Freshness: 5/5 from 2024-2026
          └─ Contradictions: 2 found
 
 📊 RESEARCH DEPTH
@@ -102,7 +102,7 @@ Most AI assistants give you answers. This skill gives you **researched insights*
    Sources: 5 (1 premium, 1 news, 3 industry)
    Coverage: High
 ══════════════════════════════════════════
-✓ READY: insight-ai-coding-market-2025.html
+✓ READY: insight-ai-coding-market-2026.html
 ```
 
 </details>
@@ -157,7 +157,7 @@ You need these MCP servers configured in Claude Code:
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │  Query                                                          │
-│  "Compare React vs Vue for enterprise 2025"                     │
+│  "Compare React vs Vue for enterprise 2026"                     │
 └─────────────────┬───────────────────────────────────────────────┘
                   │
                   ▼
@@ -206,7 +206,7 @@ You need these MCP servers configured in Claude Code:
 ┌─────────────────────────────────────────────────────────────────┐
 │  7. OUTPUT                                                      │
 │  Auto-select format → Generate HTML report                      │
-│  insight-react-vs-vue-2025.html                                 │
+│  insight-react-vs-vue-2026.html                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -220,12 +220,12 @@ You need these MCP servers configured in Claude Code:
 |------------|---------|-------------|
 | Comparison | "Claude Code vs Cursor vs Windsurf" | Comparison table HTML |
 | Fact | "What is Claude's context window?" | Quick answer in chat |
-| Overview | "AI coding tools market 2025" | Full HTML report |
+| Overview | "AI coding tools market 2026" | Full HTML report |
 | How-to | "How to set up MCP servers" | Step-by-step guide |
 
 ### Sample Reports
 
-- [AI Coding Tools Market 2025](examples/insight-ai-coding-market-2025.html) — Market analysis with contradiction detection
+- [AI Coding Tools Market 2026](examples/insight-ai-coding-market-2026.html) — Market analysis with contradiction detection
 - [Claude Code vs Cursor vs Windsurf](examples/insight-claude-vs-cursor-vs-windsurf.html) — Tool comparison
 
 ---

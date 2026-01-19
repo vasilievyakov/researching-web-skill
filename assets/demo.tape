@@ -12,7 +12,7 @@ Set Padding 20
 Set TypingSpeed 50ms
 
 # Start
-Type "claude 'Research AI coding tools market 2025'"
+Type "claude 'Research AI coding tools market 2026'"
 Sleep 500ms
 Enter
 Sleep 800ms
@@ -20,7 +20,7 @@ Sleep 800ms
 # Progress output
 Type@0ms `══════════════════════════════════════════════════════════`
 Enter
-Type@0ms `   RESEARCHING: "AI coding tools market 2025"`
+Type@0ms `   RESEARCHING: "AI coding tools market 2026"`
 Enter
 Type@0ms `══════════════════════════════════════════════════════════`
 Enter
@@ -59,7 +59,7 @@ Type@0ms `[■■■■■■] Confidence: 87%`
 Enter
 Type@0ms `         ├─ Consensus: 4/5 sources agree`
 Enter
-Type@0ms `         ├─ Freshness: 5/5 from 2024-2025`
+Type@0ms `         ├─ Freshness: 5/5 from 2025-2026`
 Enter
 Type@0ms `         └─ Contradictions: 2 found`
 Enter
