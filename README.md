@@ -279,6 +279,33 @@ The skill auto-detects query type and selects the best approach:
 
 ---
 
+## Learnings
+
+### Why Contradiction Detection?
+
+Most AI search tools hide conflicting information — they pick one answer and present it as truth. But real research often reveals disagreements between sources.
+
+**Example:** When researching "AI coding tools market size", we found:
+- CB Insights: "$4B market"
+- SecondTalent: "$4.91B market"
+
+Without contradiction detection, you'd get one number and trust it. With it, you see both — and understand *why* they differ (scope definitions). This is the difference between an answer and an insight.
+
+### From 556 to 127 Lines
+
+The first version of this skill was 556 lines — detailed explanations, scoring tables, step-by-step instructions.
+
+**The problem:** Claude is already smart. Over-explaining makes the skill slower and harder to maintain.
+
+**The fix:** Applied "Andrej Karpathy's rule" — trust the model, remove everything it already knows. Keep only:
+- What tools to use (MCP names)
+- What output format to show
+- What makes this skill unique (contradictions, confidence)
+
+Result: **127 lines** that work better than 556.
+
+---
+
 ## Contributing
 
 Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md).
