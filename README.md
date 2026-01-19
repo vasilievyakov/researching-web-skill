@@ -53,12 +53,20 @@ Most AI assistants give you answers. This skill gives you **researched insights*
 
 ## Demo
 
+**Terminal output:**
+
 <p align="center">
   <img src="assets/demo.gif" width="700" alt="Demo: Researching AI coding tools market"/>
 </p>
 
+**Generated HTML report:**
+
+<p align="center">
+  <img src="assets/report-screenshot.png" width="700" alt="Generated HTML report with confidence scores"/>
+</p>
+
 <details>
-<summary><strong>See example output</strong></summary>
+<summary><strong>See full terminal output</strong></summary>
 
 ```
 ══════════════════════════════════════════
