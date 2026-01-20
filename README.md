@@ -126,7 +126,7 @@ You need these MCP servers configured in Claude Code:
 | MCP Server | Purpose | Required |
 |------------|---------|----------|
 | [Exa](https://exa.ai) | Semantic web search | Yes |
-| [Tabstack](https://tabstack.dev) | Content extraction | Recommended |
+| [Tabstack](https://tabstack.ai) | Content extraction | Recommended |
 
 <details>
 <summary><strong>MCP Configuration Example</strong></summary>
