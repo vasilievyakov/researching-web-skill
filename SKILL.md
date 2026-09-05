@@ -22,7 +22,7 @@ Honor a depth/budget already selected by the user. Otherwise offer this choice o
 
 These are configurable local caps, **not account quotas or costs**. Failures, retries, and fallback calls use the same caps. Targets are goals, not guarantees of coverage; pages and agents are different units. Provider credits and model/agent usage are separate and may run out first. Do not launch a large agent swarm merely because deep mode is selected.
 
-If no depth choice is available, use demo and label the result **Demo — limited research**. For URL-only work, skip search. Missing keys: explain setup; do not fabricate results or silently use the example reports.
+If no depth choice is available, use demo and label the result **Demo — limited research**. For URL-only work, skip search. Missing keys: give a brief setup message naming the missing environment variable, actual request usage, and how to resume; do not generate a long empty report. Never fabricate results or silently substitute example reports.
 
 Read [API workflow](references/api-workflow.md) for commands, budgets, continuation, and error handling. Resolve the script relative to this SKILL.md, regardless of the current project directory.
 
@@ -68,7 +68,7 @@ Use qualitative confidence with reasons (authority, independence, freshness, cov
 
 ## 6. Report actual scope
 
-Use chat for a concise factual answer, a comparison table for alternatives, or [the HTML template](references/report-template.html) for a longer report. Optional structured output shapes: [schemas](references/schemas.md). Use the user's language.
+Use chat for a concise factual answer, a comparison table for alternatives, or [the HTML template](references/report-template.html) for a longer report. Optional structured output shapes: [schemas](references/schemas.md). Use the user's language. Lead the findings with a useful answer or recommendation, explain the decisive tradeoffs, and give a concrete next check; keep collection machinery out of the main narrative.
 
 Read `status` and put scope near the top of **every** output:
 - Mode; label any demo as **Demo — limited research**.
@@ -77,6 +77,6 @@ Read `status` and put scope near the top of **every** output:
 - Coverage status: sufficient for this question, partial, or budget-limited; unresolved dimensions and failed reads that matter.
 - Claim-level citations and confidence reasons; distinguish retrieval date from publication date.
 
-For HTML, fill every template placeholder, escape source text and attributes, allow only HTTP(S) citation URLs, and verify that no placeholders remain. Populate `PROVIDERS_USED` from the ledger. Keep source material as text, not executable HTML.
+For HTML, fill every template placeholder, escape source text and attributes, allow only HTTP(S) citation URLs, and verify that no placeholders remain. Populate `PROVIDERS_USED` from the ledger and `RESEARCH_AGENT` with the actual host (Claude Code or Codex). Keep source material as text, not executable HTML.
 
 If the budget runs out, produce a useful partial report with explicit gaps and the next proposed round. Do not relabel it as full research. Historical files in `examples/` illustrate formatting only; they are never a substitute for fresh API evidence.

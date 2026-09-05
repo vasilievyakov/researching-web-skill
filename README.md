@@ -4,25 +4,37 @@
 
 # Researching Web
 
-A Claude Code skill for iterative research through **direct Exa and Tabstack APIs**. Choose a depth, collect and read sources in rounds, check contradictions, and produce a cited answer or HTML report with an honest account of its coverage.
+A skill for Claude Code and Codex that researches through **direct Exa and Tabstack APIs**. Choose a depth, collect and read sources in rounds, check contradictions, and produce a cited answer or HTML report with an honest account of its coverage.
 
 Exa provides search. Tabstack extracts page content; Exa contents can also read pages. MCP installation is no longer required. The skill does not use built-in web search as a fallback.
 
 ## Installation
+
+For Claude Code:
 
 ```bash
 git clone https://github.com/vasilievyakov/researching-web-skill.git \
   ~/.claude/skills/researching-web
 ```
 
+For Codex:
+
+```bash
+git clone https://github.com/vasilievyakov/researching-web-skill.git \
+  ~/.agents/skills/researching-web
+```
+
+For a project-local installation, use `.claude/skills/researching-web` for Claude Code or `.agents/skills/researching-web` for Codex inside that project. In Codex, select the skill with `$researching-web`; see the [official skill loading documentation](https://learn.chatgpt.com/docs/build-skills#where-codex-loads-local-skills). If an older copy is already installed elsewhere, select the intended copy explicitly rather than assuming matching names will merge.
+
 Requirements: Python 3.10+, internet access, an [Exa API key](https://exa.ai), and optionally a [Tabstack API key](https://tabstack.ai). The collector uses Python's standard library; no npm server or Python package installation is needed.
 
-Make `EXA_API_KEY` and optionally `TABSTACK_API_KEY` available in the environment that launches Claude Code. For example, in a terminal session (replace the placeholders locally):
+Make `EXA_API_KEY` and optionally `TABSTACK_API_KEY` available in the environment that launches your agent. For example, in a terminal session (replace the placeholders locally):
 
 ```bash
 export EXA_API_KEY='your-exa-key'
 export TABSTACK_API_KEY='your-tabstack-key'  # optional
 claude
+# Or launch Codex from the same environment: codex
 ```
 
 Do not put real keys in prompts, reports, commits, or shared shell history. An already-running desktop app may not inherit a terminal's environment; configure its launch environment before starting it. The skill never reads keys from other applications' settings. Existing MCP configuration can stay installed for other workflows; this skill does not use it.
@@ -70,6 +82,8 @@ Concurrent workers must share the same run directory. Budget reservations are at
 
 This initializes a local demo without making an API call:
 
+The commands below use the Claude installation path. For Codex, use `~/.agents/skills/researching-web/scripts/research.py` instead.
+
 ```bash
 python3 ~/.claude/skills/researching-web/scripts/research.py init \
   --run ./research-runs/example --topic "A question to investigate"
@@ -112,6 +126,8 @@ python3 -m unittest discover -s tests -v
 ```
 
 It exercises the CLI collection path with mocked HTTP responses, API request contracts, caching/resume, concurrent budget enforcement, retries, fallback, and failure handling. It makes no paid API requests. Mocked tests do not establish live provider availability, extraction quality, or equivalence to an expert's manual research.
+
+For checks in both actual agents, use the [acceptance scenarios](tests/acceptance.md). Keep model/agent checks, live collection, and mocked transport checks separate when reporting results.
 
 For a live acceptance pass, use an explicitly selected budget and real environment keys, then verify that cited claims are supported by the saved pages, query rounds close documented gaps, and the report's scope matches the ledger. Compare against a manual pass on the same question if quality parity is required.
 
