@@ -128,20 +128,59 @@ You need these MCP servers configured in Claude Code:
 | [Exa](https://exa.ai) | Semantic web search | Yes |
 | [Tabstack](https://tabstack.ai) | Content extraction | Recommended |
 
+### Configure Claude Code
+
+For the local npm servers below, install Node.js 20+ (which includes `npx`)
+and obtain an API key from each service you want to use.
+
+Run these commands in your terminal, replacing the placeholder keys:
+
+```bash
+claude mcp add --transport stdio --scope user exa \
+  --env EXA_API_KEY=your-exa-api-key -- npx -y exa-mcp-server
+
+# Optional: add Tabstack for content extraction
+claude mcp add --transport stdio --scope user tabstack \
+  --env TABSTACK_API_KEY=your-tabstack-api-key -- npx -y @tabstack/mcp
+```
+
+`--scope user` makes the servers available across all your Claude Code projects.
+The npm packages are [`exa-mcp-server`](https://www.npmjs.com/package/exa-mcp-server)
+and [`@tabstack/mcp`](https://www.npmjs.com/package/@tabstack/mcp).
+
+Verify the connections:
+
+```bash
+claude mcp list
+```
+
+Start a new Claude Code session and open `/mcp` to check that `exa` (and
+`tabstack`, if added) is connected and exposes its tools. If a connection fails,
+check the API key and that Node.js and `npx` are available in your terminal.
+
+See the [Claude Code MCP setup documentation](https://code.claude.com/docs/en/mcp)
+for configuration scopes and troubleshooting.
+
 <details>
-<summary><strong>MCP Configuration Example</strong></summary>
+<summary><strong>Equivalent project-scoped .mcp.json example</strong></summary>
+
+As an alternative to the user-scoped commands above, save this configuration
+as `.mcp.json` in your project root. Replace the placeholder keys locally;
+do not commit real API keys. Omit `tabstack` if you only want Exa.
 
 ```json
 {
   "mcpServers": {
     "exa": {
+      "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@anthropic/mcp-exa"],
+      "args": ["-y", "exa-mcp-server"],
       "env": { "EXA_API_KEY": "your-key" }
     },
     "tabstack": {
+      "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@anthropic/mcp-tabstack"],
+      "args": ["-y", "@tabstack/mcp"],
       "env": { "TABSTACK_API_KEY": "your-key" }
     }
   }
