@@ -23,7 +23,7 @@ Open an issue with:
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes
-4. Test with Claude Code
+4. Run `python3 -m unittest discover -s tests -v`; for workflow changes, also test with Claude Code using an explicitly selected live API budget when available. Clearly distinguish mocked checks from live acceptance.
 5. Commit (`git commit -m 'Add amazing feature'`)
 6. Push (`git push origin feature/amazing-feature`)
 7. Open a Pull Request
@@ -52,10 +52,10 @@ Open an issue with:
 ## Areas for Improvement
 
 - [ ] More output formats (PDF, Markdown)
-- [ ] Additional MCP search providers
+- [ ] Additional direct API providers with shared request accounting
 - [ ] Multilingual support
 - [ ] Custom confidence thresholds
-- [ ] Caching for repeated queries
+- [x] Persistent caching and request budgets for repeated queries
 
 ## Questions?
 
