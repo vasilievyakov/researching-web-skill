@@ -22,7 +22,7 @@ Honor a depth/budget already selected by the user. Otherwise offer this choice o
 
 These are configurable local caps, **not account quotas or costs**. Failures, retries, and fallback calls use the same caps. Targets are goals, not guarantees of coverage; pages and agents are different units. Provider credits and model/agent usage are separate and may run out first. Do not launch a large agent swarm merely because deep mode is selected.
 
-If no depth choice is available, use demo and label the result **Demo — limited research**. For URL-only work, skip search. Missing keys: give a brief setup message naming the missing environment variable, actual request usage, and how to resume; do not generate a long empty report. Never fabricate results or silently substitute example reports.
+If no depth choice is available, use demo and label the result **Demo — limited research**. For URL-only work, skip search. Missing keys: stop with at most three sentences naming the missing environment variable, actual request usage, and how to resume. This setup-error response replaces the report requirements in step 6; do not add empty statistics tables, a comparison, or an upgrade recommendation. Never fabricate results or silently substitute example reports.
 
 Read [API workflow](references/api-workflow.md) for commands, budgets, continuation, and error handling. Resolve the script relative to this SKILL.md, regardless of the current project directory.
 
