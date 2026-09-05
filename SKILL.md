@@ -35,7 +35,7 @@ python3 <skill-dir>/scripts/research.py init --run <run-dir> --topic "<question>
 python3 <skill-dir>/scripts/research.py status --run <run-dir>
 ```
 
-Create `<run-dir>/notes.md` with the research question, subquestions, chosen depth, known constraints, and a coverage checklist. Update it after each round with decisions, rejected sources, evidence links, contradictions, and remaining gaps. The coordinator owns this file when workers are used.
+Create `<run-dir>/notes.md` with the research question, subquestions, chosen depth, known constraints, and a coverage checklist. For decisions, record every requested capability and preference in a requirements table. Treat requested capabilities as required unless the user makes them optional; do not demote one based on assumptions about the user's habits. The primary recommendation must satisfy them, or be explicitly provisional pending verification; options needing relaxed requirements are alternatives. Update notes after each round with decisions, rejected sources, evidence links, contradictions, and remaining gaps. The coordinator owns this file when workers are used.
 
 ## 3. Search, select, and read
 
@@ -64,6 +64,8 @@ Before extending a cap, describe the remaining gaps, attempts already used, and 
 
 Build an evidence table in notes: claim, source URL/path, relevant passage, date/scope, supporting or conflicting evidence, and unresolved questions. Distinguish facts from inference. For conflicts, explain the differing definitions, dates, or methods when supported; otherwise leave the conflict unresolved. Identify critical single-source or inaccessible claims and how they limit the conclusion.
 
+Check contradictions within a source as well as between sources: compare numeric prose, tables, examples, units, dates, and test conditions. Do not cherry-pick a precise number from an internally inconsistent page; show the discrepancy or omit the number from decision-making. Before recommending an option, check it against every requirement. If it needs custom work, relaxed requirements, or an unverified capability, say so in the recommendation itself. Use conditional recommendations when evidence cannot establish a complete fit.
+
 Use qualitative confidence with reasons (authority, independence, freshness, coverage, contradictions). Do not invent a calibrated confidence percentage, source scores, analyzed-page counts, or numbers of extracted facts.
 
 ## 6. Report actual scope
@@ -77,6 +79,8 @@ Read `status` and put scope near the top of **every** output:
 - Coverage status: sufficient for this question, partial, or budget-limited; unresolved dimensions and failed reads that matter.
 - Claim-level citations and confidence reasons; distinguish retrieval date from publication date.
 
-For HTML, fill every template placeholder, escape source text and attributes, allow only HTTP(S) citation URLs, and verify that no placeholders remain. Populate `PROVIDERS_USED` from the ledger and `RESEARCH_AGENT` with the actual host (Claude Code or Codex). Keep source material as text, not executable HTML.
+For HTML, fill every template placeholder, escape source text and attributes, allow only HTTP(S) citation URLs, and verify that no placeholders remain. Populate `PROVIDERS_USED` from the ledger, `RESEARCH_AGENT` with the actual host (Claude Code or Codex), and `LANG` with the report language code. Translate fixed headings and labels as well as the content. Keep source material as text, not executable HTML. Keep each scope field to one short sentence; move extended audit detail to notes or a collapsible appendix so the recommendation is easy to reach.
+
+Before delivery, check the report itself, not only notes: every decisive factual claim has an adjacent citation; opening findings and comparison cells preserve the same caveats as the evidence table; no capability or benchmark labeled unverified later is asserted as established earlier. A bibliography alone does not satisfy claim attribution. On narrow screens, tables/code must scroll within their containers and long text must wrap rather than widening the page; do not use non-wrapping badges for long labels.
 
 If the budget runs out, produce a useful partial report with explicit gaps and the next proposed round. Do not relabel it as full research. Historical files in `examples/` illustrate formatting only; they are never a substitute for fresh API evidence.

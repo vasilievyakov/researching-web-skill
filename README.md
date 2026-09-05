@@ -106,14 +106,25 @@ Read the returned Markdown file, update research notes, and repeat for coverage 
 
 ## Demo and examples
 
-**The following are historical presentation examples, not live API results or acceptance tests of this implementation.** Their displayed counts and confidence percentages do not establish current coverage. New reports use actual run statistics and confidence reasons.
+### Live API examples
+
+The same question about SQLite FTS5 versus Meilisearch for personal notes was researched in Codex and Claude Code on September 5, 2026. Each used two Exa searches and five Exa page extractions; the final reports were reviewed against saved evidence and checked at desktop and mobile widths. The examples show the result after review, not a guarantee of first-pass correctness.
+
+- [Codex demo report](examples/sqlite-vs-meilisearch-codex-demo.html)
+- [Claude Code demo report](examples/sqlite-vs-meilisearch-claude-demo.html)
+
+Report review exposed unsupported assumptions about user requirements, inconsistent numbers inside provider documentation, missing adjacent citations, and narrow-screen overflow. The skill's verification instructions and report template were tightened accordingly. Correcting reports from saved evidence did not require additional research API calls. See [acceptance results](tests/acceptance-results.md) for the exact scope and limitations.
+
+### Historical presentation examples
+
+**The following are historical presentation examples, not live API results or acceptance tests of this implementation.** Their displayed counts and confidence percentages do not establish current coverage.
 
 <p align="center">
   <img src="assets/demo.gif" width="700" alt="Historical illustration of the research workflow"/>
 </p>
 
-- [AI Coding Tools Market 2026](examples/insight-ai-coding-market-2026.html)
-- [Claude Code vs Cursor vs Windsurf](examples/insight-claude-vs-cursor-vs-windsurf.html)
+- [AI Coding Tools Market 2025](examples/insight-ai-coding-market-2025.html)
+- [Claude Code vs Cursor vs Windsurf](examples/insight-claude-code-vs-cursor-vs-windsurf.html)
 
 A demo run always says “Demo — limited research.” A standard/deep run that runs out of budget presents a partial result and the missing evidence. The [HTML template](references/report-template.html) puts mode, usage, and limitations above the findings.
 

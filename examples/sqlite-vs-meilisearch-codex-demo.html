@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQLite FTS5 или Meilisearch: 10 000 личных заметок на Mac</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-secondary: #f8f9fa;
+      --text: #1a1a2e;
+      --text-muted: #6c757d;
+      --accent: #4361ee;
+      --accent-light: #e8edff;
+      --border: #e9ecef;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1a1a2e;
+        --bg-secondary: #16213e;
+        --text: #e8e8e8;
+        --text-muted: #a0a0a0;
+        --accent: #4cc9f0;
+        --accent-light: #1a2744;
+        --border: #2d3748;
+        --success: #34d399;
+        --warning: #fbbf24;
+        --danger: #f87171;
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .meta {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .confidence {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .confidence-bar {
+      width: 100px;
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .confidence-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    .confidence-high { background: var(--success); }
+    .confidence-medium { background: var(--warning); }
+    .confidence-low { background: var(--danger); }
+
+    section {
+      margin-bottom: 2rem;
+    }
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+    .key-findings {
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .key-findings ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .key-findings li {
+      padding-left: 1.5rem;
+      position: relative;
+    }
+    .key-findings li::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    /* Comparison table */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+    .comparison-table th,
+    .comparison-table td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .comparison-table th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+    }
+    .comparison-table tr:hover {
+      background: var(--accent-light);
+    }
+    .winner {
+      background: var(--accent-light);
+      font-weight: 600;
+    }
+
+    /* Sources */
+    .sources {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .sources h2 {
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .source-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .source-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      font-size: 0.875rem;
+    }
+    .source-item a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .source-item a:hover {
+      text-decoration: underline;
+    }
+    .source-score {
+      background: var(--bg-secondary);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .research-scope {
+      margin: 1.5rem 0;
+      padding: 1rem;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      background: var(--bg-secondary);
+    }
+    .research-scope p + p { margin-top: 0.5rem; }
+
+    footer {
+      margin-top: 3rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Responsive fixes verified during acceptance review. */
+    body { overflow-wrap: anywhere; }
+    .confidence { flex-wrap: wrap; }
+    .comparison-table { display: block; overflow-x: auto; }
+    .source-item { gap: 0.75rem; }
+    .source-score { flex-shrink: 0; }
+    pre { max-width: 100%; overflow-x: auto; }
+    @media (max-width: 600px) {
+      body { padding: 1rem; }
+      .source-item { flex-direction: column; align-items: flex-start; }
+      .comparison-table th, .comparison-table td { padding: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SQLite FTS5 или Meilisearch: 10 000 личных заметок на Mac</h1>
+    <div class="meta">
+      <div class="confidence">
+        <span>Уверенность:</span>
+        <span>Средняя для выбора; высокая для явно описанных функций</span>
+      </div>
+      <div>Проанализировано: 5 страниц / 2 организации</div>
+      <div>Дата: 5 сентября 2026</div>
+    </div>
+  </header>
+
+  <section class="research-scope" aria-label="Объём и ограничения исследования">
+    <h2>Demo — limited research</h2>
+    <p><strong>Покрытие:</strong> Частичное: предварительный выбор, ограниченный демо-бюджетом.</p>
+    <p><strong>Использование запросов:</strong> Поиск 2/2, чтение 5/5; ошибок нет, квота и стоимость Exa неизвестны.</p>
+    <p><strong>Источники:</strong> Прочитано 5 из 5 страниц двух разработчиков; независимых сравнительных исследований нет.</p>
+    <p><strong>Ограничения:</strong> Не проверены локальная скорость, русский поиск, опечатки в кавычках и обновления.</p>
+    <p><strong>Основания уверенности:</strong> Официальная документация; рекомендация требует проверки на ваших заметках.</p>
+  </section>
+
+  <section class="key-findings">
+    <h2>Практический выбор</h2>
+    <ul>
+      <li>Мой выбор — локальный Meilisearch, если терпимость к опечаткам обязательна. Она встроена; цена — отдельный серверный процесс. При главном приоритете «никакого сервиса» выбирайте SQLite FTS5, принимая отдельную разработку исправления запросов. (<a href="https://www.sqlite.org/fts5.html">S1: SQLite: FTS5</a>; <a href="https://www.sqlite.org/serverless.html">S2: SQLite без сервера</a>; <a href="https://www.meilisearch.com/docs/capabilities/full_text_search/relevancy/typo_tolerance_settings">S3: Meilisearch: опечатки</a>; <a href="https://www.meilisearch.com/docs/resources/self_hosting/getting_started/install_locally">S5: Meilisearch: локальная установка</a>)</li><li>Оба варианта поддерживают поиск фраз. В FTS5 это последовательность токенов; Meilisearch ищет последовательные слова в кавычках. Сочетание кавычек и опечаток в собранной документации явно не раскрыто. (<a href="https://www.sqlite.org/fts5.html">S1: SQLite: FTS5</a>; <a href="https://www.meilisearch.com/docs/capabilities/full_text_search/getting_started/phrase_search">S4: Meilisearch: фразы</a>)</li><li>Скорость на 10 000 ваших заметок не измерена. Решающий первый тест — качество поиска и удобство локальной эксплуатации, затем задержка и память.</li>
+
+    </ul>
+  </section>
+
+  <section class="content">
+    <h2>Что означает этот выбор</h2><p>Если заметки хранятся в Markdown или других файлах, оставьте их источником истины, а поисковый индекс сделайте пересоздаваемым. В обоих случаях нужен небольшой импортёр, который обновляет изменённые заметки и удаляет из индекса исчезнувшие. Meilisearch и FTS5 — движки, а не готовый интерфейс вашей базы. Это предлагаемая схема интеграции.</p><p>Для одного пользователя отсутствие отдельного процесса — веский плюс SQLite. Но минимум обслуживания не равен минимуму кода: собственный подбор исправлений слов, ранжирование кандидатов и защита от ложных совпадений могут оказаться сложнее запуска Meilisearch. Поэтому при всех заявленных требованиях выбираю Meilisearch; если опечатки лишь приятное дополнение, выбор меняется на FTS5. Это инженерный вывод из возможностей, не результат сравнительного бенчмарка. (<a href="https://www.sqlite.org/fts5.html">S1: SQLite: FTS5</a>; <a href="https://www.sqlite.org/serverless.html">S2: SQLite без сервера</a>; <a href="https://www.meilisearch.com/docs/capabilities/full_text_search/relevancy/typo_tolerance_settings">S3: Meilisearch: опечатки</a>; <a href="https://www.meilisearch.com/docs/resources/self_hosting/getting_started/install_locally">S5: Meilisearch: локальная установка</a>)</p><table class="comparison-table"><thead><tr><th>Критерий</th><th>SQLite FTS5</th><th>Meilisearch</th></tr></thead><tbody><tr><th>Слова и фразы</th><td>MATCH, фразы, префиксы; сортировка ORDER BY rank. Точность фразы определяется токенизацией.</td><td>Фразы в кавычках; для обязательных дополнительных слов используйте matchingStrategy=all. (<a href="https://www.sqlite.org/fts5.html">S1: SQLite: FTS5</a>; <a href="https://www.meilisearch.com/docs/capabilities/full_text_search/getting_started/phrase_search">S4: Meilisearch: фразы</a>)</td></tr><tr><th>Опечатки</th><td>Штатного готового режима исправления запросов нет; trigram ищет подстроки. Нужен отдельный слой.</td><td>Включены по умолчанию: одна ошибка с 5 символов, две с 9. Ошибка первой буквы считается за две. (<a href="https://www.sqlite.org/fts5.html">S1: SQLite: FTS5</a>; <a href="https://www.meilisearch.com/docs/capabilities/full_text_search/relevancy/typo_tolerance_settings">S3: Meilisearch: опечатки</a>)</td></tr><tr><th>Обслуживание</th><td>Работает внутри приложения, без отдельного сервера.</td><td>Нужно запускать и останавливать сервер, сохранять каталог данных и управлять обновлениями. (<a href="https://www.sqlite.org/serverless.html">S2: SQLite без сервера</a>; <a href="https://www.meilisearch.com/docs/resources/self_hosting/getting_started/install_locally">S5: Meilisearch: локальная установка</a>)</td></tr><tr><th>Без интернета</th><td>Работа с файлами БД непосредственно на диске.</td><td>Локальный self-hosted сервер; офлайн для обычного текстового поиска ожидается из архитектуры и требует проверки. (<a href="https://www.sqlite.org/serverless.html">S2: SQLite без сервера</a>; <a href="https://www.meilisearch.com/docs/resources/self_hosting/getting_started/install_locally">S5: Meilisearch: локальная установка</a>)</td></tr><tr><th>Mac и язык</th><td>Проверить наличие FTS5 в сборке приложения; unicode61 — не готовая русская морфология.</td><td>Текущая страница установки указывает macOS 14+ и Intel/Apple Silicon; русское качество надо измерить. (<a href="https://www.sqlite.org/fts5.html">S1: SQLite: FTS5</a>; <a href="https://www.meilisearch.com/docs/resources/self_hosting/getting_started/install_locally">S5: Meilisearch: локальная установка</a>)</td></tr></tbody></table><h2>Компромиссы, которые легко пропустить</h2><p>В Meilisearch не стоит сразу снижать пороги опечаток: документация предупреждает о ложных совпадениях. Короткие слова по умолчанию не исправляются. Для личных заметок отдельно проверьте фамилии, даты, номера и смешение языков. Раздел о числах содержит пример, неочевидно согласующийся с общим правилом коротких слов; поведение числовых запросов оставлено для теста. (<a href="https://www.meilisearch.com/docs/capabilities/full_text_search/relevancy/typo_tolerance_settings">S3: Meilisearch: опечатки</a>)</p><p>Точный поиск цитаты и поиск неточно запомненной фразы — разные потребности. Предложение для интерфейса: кавычки означают строгую фразу; при нулевом результате предложить обычный поиск без кавычек. Не обещать исправления внутри кавычек до проверки. В Meilisearch стандартная стратегия last может отбросить дополнительные слова; all нужна, когда пользователь ожидает наличия каждого слова. (<a href="https://www.meilisearch.com/docs/capabilities/full_text_search/getting_started/phrase_search">S4: Meilisearch: фразы</a>)</p><p>Для FTS5 не подменяйте исправление опечаток префиксами или trigram. Если всё-таки выбрать SQLite, возможен отдельный словарь терминов с подбором близких слов и повторным MATCH; это проектное предложение, а не штатная функция. Для русского языка Porter не подходит как готовое решение: он предназначен для английского. (<a href="https://www.sqlite.org/fts5.html">S1: SQLite: FTS5</a>)</p><p>Для Meilisearch предлагаю локальный бинарник, прослушивание только loopback и постоянный каталог данных. После установки нужен только локальный текстовый индекс, без облачного поиска и внешних моделей. Возможность офлайн-работы следует из локальной архитектуры, но отсутствие любых исходящих обращений здесь не проверено. Процедуры миграции версий и резервного копирования в этот обзор не вошли. (<a href="https://www.meilisearch.com/docs/resources/self_hosting/getting_started/install_locally">S5: Meilisearch: локальная установка</a>)</p><h2>Маленькая проверка перед внедрением</h2><ol><li>Возьмите локальную копию всех примерно 10 000 заметок, сохранив id, заголовок и текст. Запишите общий объём текста, версию macOS и версии движков. В SQLite проверьте создание временной таблицы USING fts5. В Meilisearch дождитесь завершения индексации.</li><li>Подготовьте 40 запросов с заранее указанной ожидаемой заметкой: 10 обычных слов/наборов слов, 10 точных фраз, 10 опечаток, 10 сложных случаев. В последних включите короткие слова, ошибку первой буквы, ё/е, русские окончания, раскладку, числа и фразу с опечаткой. Не считать морфологию и раскладку обычными однобуквенными ошибками.</li><li>Сравните попадание ожидаемой заметки в первые пять результатов, число пустых выдач и ложные совпадения строгих фраз. Для Meilisearch используйте all там, где требуются все слова. Для FTS5 сначала измерьте штатный вариант; если добавите исправления, учитывайте его как отдельную конфигурацию и запишите затраченное время разработки.</li><li>Замерьте полную задержку запроса до списка результатов: первый проход после перезапуска отдельно, затем пять повторов каждого запроса. Запишите p50/p95, размер индекса, RAM в простое и после поиска, время индексации. Предлагаемый ориентир — p95 менее 100 мс на прогретом поиске; это критерий приёмки, не обещание скорости.</li><li>Отключите интернет, перезапустите приложение и локальный сервер, повторите запросы. Добавьте, измените и удалите по заметке: результат должен обновиться после завершения индексации и сохраниться после перезапуска. Проверьте восстановление индекса из исходных файлов.</li><li>Оставьте Meilisearch, если он находит ожидаемую заметку в топ-5 хотя бы для 8 из 10 обычных опечаток, проходит строгие фразы и офлайн-перезапуск, а память и запуск приемлемы. Если выгода мала и отдельный сервис мешает, выбирайте FTS5, явно принимая ограничение опечаток. Пороги предложены для этой проверки и не являются стандартом качества.</li></ol><p>Эта проверка пока не выполнена: пользовательский корпус не предоставлен, движки не устанавливались. Если терпимость к опечаткам обязательна, а оба варианта не проходят тест, внедрение следует отложить до настройки поиска; незаметно исключать это требование нельзя.</p><h2>Что осталось неизвестным</h2><p>Не измерены ресурсы и релевантность на вашем Mac, работа русских словоформ, ё/е и неверной раскладки, опечатки внутри кавычек и числовые запросы. Не изучены восстановление резервных копий и миграции Meilisearch. Пять страниц принадлежат двум разработчикам; независимого сравнительного исследования нет. Следующий полезный шаг — описанная локальная проверка; новых сетевых запросов в этом запуске не будет.</p><p>Источники извлечены 5 сентября 2026 года через Exa. У FTS5 указано обновление 12 июля 2025 года, у SQLite Serverless — 12 июня 2025 года; даты публикации трёх страниц Meilisearch не указаны. Свежесть кэша провайдера независимо не проверялась. Подробные доказательства и несогласованности записаны в notes.md.</p>
+
+  </section>
+
+  <section class="sources">
+    <h2>Источники</h2>
+    <ul class="source-list">
+      <li class="source-item"><a href="https://www.sqlite.org/fts5.html">S1: SQLite: FTS5</a><span class="source-score">Официальная документация</span></li><li class="source-item"><a href="https://www.sqlite.org/serverless.html">S2: SQLite без сервера</a><span class="source-score">Официальная документация</span></li><li class="source-item"><a href="https://www.meilisearch.com/docs/capabilities/full_text_search/relevancy/typo_tolerance_settings">S3: Meilisearch: опечатки</a><span class="source-score">Официальная документация</span></li><li class="source-item"><a href="https://www.meilisearch.com/docs/capabilities/full_text_search/getting_started/phrase_search">S4: Meilisearch: фразы</a><span class="source-score">Официальная документация</span></li><li class="source-item"><a href="https://www.meilisearch.com/docs/resources/self_hosting/getting_started/install_locally">S5: Meilisearch: локальная установка</a><span class="source-score">Официальная документация</span></li>
+
+    </ul>
+  </section>
+
+  <footer>
+    Отчёт подготовил Codex. Провайдер сбора: exa
+  </footer>
+</body>
+</html>

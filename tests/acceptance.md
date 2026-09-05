@@ -31,8 +31,10 @@ Pass criteria:
 - Both request caps hold. The report's actual usage and retrieved-page count match `status`.
 - The agent reads the saved pages before making source-backed claims and keeps an evidence table in notes.
 - The result gives a clear recommendation with relevant tradeoffs, rather than merely reproducing search results. Check critical claims against the cited passages.
+- The recommendation preserves all requested capabilities. It must not prefer a simpler option by silently dropping typo tolerance; necessary custom work or unverified phrase behavior belongs in the recommendation, not only a footnote.
+- Numeric claims are checked within each source. If prose and a table disagree about memory, disk size, or benchmark conditions, the report exposes that discrepancy or excludes those numbers from the decision.
 - The report clearly labels demo/partial coverage, names gaps, and avoids unsupported numeric confidence or benchmark claims.
-- HTML renders legibly, has working source links, contains no template placeholders, and names the actual research agent.
+- HTML renders legibly at desktop and 390px viewport widths without page-level horizontal overflow, has adjacent citations for decisive claims, contains no template placeholders, and names the actual research agent. Scope labels use the report language; detailed audits do not obscure the recommendation.
 
 Do not equate reaching five pages with analytical quality. Record provider failures and partial outcomes rather than restarting with a new budget.
 
@@ -41,3 +43,7 @@ Do not equate reaching five pages with analytical quality. Record provider failu
 With a separately selected larger total budget, continue the same run. Verify that prior requests and notes remain, cached pages are reused, and new queries address documented gaps. Targets above five must result in additional research rounds when needed, not only a larger first search result list.
 
 The offline suite covers deterministic accounting, retries, concurrency, and continuation. Actual agent runs establish instruction-following and usability; live provider calls establish connectivity and returned evidence. A manual baseline on the same question is required to assess parity with expert research.
+
+## Review without recollection
+
+After collection, remove API keys from the review session's environment and keep the original ledger. Ask the agent to check its existing report and saved evidence against the current skill and original requirements. This is a review of available evidence, not a missing-key setup failure. Corrected reports must keep the same attempt counts and source inventory. Preserve the first report when comparing revisions, and distinguish agent-generated content from later editorial or styling corrections.
